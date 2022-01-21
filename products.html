@@ -154,7 +154,6 @@
             // 成功
             .then((res) => {
               this.getData()
-              this.isReady = true
             })
             // 失敗
             .catch((error) => {
@@ -167,6 +166,7 @@
             // 成功
             .then((res) => {
               this.products = res.data.products
+              this.isReady = true
             })
             // 失敗
             .catch((error) => {
