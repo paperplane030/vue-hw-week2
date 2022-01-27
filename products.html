@@ -24,11 +24,13 @@
       .images {
         height: 150px;
       }
+
     </style>
   </head>
   <body>
     <div id="app">
-      <div class="container" v-show="isReady">
+      <div class="container" v-if="isReady">
+        
         <div class="row py-3">
           <div class="col-md-6">
             <h2>產品列表</h2>
@@ -51,7 +53,7 @@
                     <span class="text-success" v-if="item.is_enabled"
                       >啟用</span
                     >
-                    <span v-else>未啟用</span>
+                    <span class="text-danger" v-else>未啟用</span>
                   </td>
                   <td width="120">
                     <button
@@ -108,7 +110,17 @@
             </template>
           </div>
         </div>
+      </div>    
+      <div class="container pt-5" v-else>
+        <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+          <div class="toast  bg-danger" role="alert" aria-live="assertive" aria-atomic="true" id="toast">
+            <div class="toast-body text-light">
+              登入資訊驗證錯誤，將回到登入頁面...
+            </div>
+          </div>
+        </div>  
       </div>
+     
     </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.min.js"
@@ -125,58 +137,8 @@
       integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
       crossorigin="anonymous"
     ></script>
+    <script type="module" src="products.js"></script>
   </body>
-  <script type="module">
-    import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js'
-
-    createApp({
-      data() {
-        return {
-          url: 'https://vue3-course-api.hexschool.io/v2',
-          path: 'paperplane-hexschool',
-          products: [],
-          product_temp: null,
-          isReady: false,
-        }
-      },
-      created() {
-        const token = document.cookie.replace(
-          /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,
-          '$1'
-        )
-        axios.defaults.headers.common['Authorization'] = token
-        this.checkLogin()
-      },
-      methods: {
-        checkLogin() {
-          axios
-            .post(`${this.url}/api/user/check`)
-            // 成功
-            .then((res) => {
-              this.getData()
-            })
-            // 失敗
-            .catch((error) => {
-              window.location = 'login.html'
-            })
-        },
-        getData() {
-          axios
-            .get(`${this.url}/api/${this.path}/admin/products`)
-            // 成功
-            .then((res) => {
-              this.products = res.data.products
-              this.isReady = true
-            })
-            // 失敗
-            .catch((error) => {
-              // console.dir(error)
-            })
-        },
-        productDetail(index) {
-          this.product_temp = this.products[index]
-        },
-      },
-    }).mount('#app')
+  
   </script>
 </html>
